@@ -1,0 +1,9 @@
+export enum Types {
+  ARTEFACT = 1,
+  AUTOMATON,
+  CYPHER,
+  INSTALLATION,
+  ODDITY,
+  PLAN,
+  VEHICLE,
+}
