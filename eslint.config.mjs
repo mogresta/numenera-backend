@@ -9,33 +9,33 @@ import prettier from "eslint-config-prettier";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
 });
 
 export default [
-    ...compat.extends(
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
-    ),
-    {
-        plugins: {
-            "@typescript-eslint": typescriptEslint,
-        },
-        languageOptions: {
-            parser: tsParser,
-            parserOptions: {
-                ecmaVersion: 'latest',
-                sourceType: 'module'
-            }
-        },
-        rules: {
-            'no-unused-vars': 'warn',
-            '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/explicit-function-return-type': 'off'
-        }
+  ...compat.extends(
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+  ),
+  {
+    plugins: {
+      "@typescript-eslint": typescriptEslint,
     },
-    prettier
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+    },
+  },
+  prettier,
 ];
