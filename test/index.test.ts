@@ -12,7 +12,7 @@ describe("Application", () => {
   }, 10000);
 
   it("Returns all methods allowed by client", async () => {
-    const response = await request(app).options("/healthcheck");
+    const response = await request(app).options("/");
 
     expect(response.status).toBe(200);
     expect(response.headers["access-control-allow-methods"]).toBe(

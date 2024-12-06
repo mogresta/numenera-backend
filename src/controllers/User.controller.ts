@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { Controller } from "../decorators/controller";
-import { Route } from "../decorators/route";
-import { Validate } from "../decorators/validator";
-import { tokenValidation } from "../validators/validateToken";
-import { signJWT } from "../services/signJWT";
+import { Controller } from "../decorators/Controller";
+import { Route } from "../decorators/Route";
+import { Validate } from "../decorators/Validator";
+import { tokenValidation } from "../validators/ValidateToken";
+import { signJWT } from "../services/SignJWT";
 import bcryptjs from "bcryptjs";
-import IUser from "../interfaces/user";
-import Orm from "../db/connection";
 
 const NAMESPACE = "User";
 

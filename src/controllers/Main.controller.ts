@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { Controller } from "../decorators/controller";
-import { Route } from "../decorators/route";
-import { Validate } from "../decorators/validator";
-import { postHealthCheckValidation } from "../validators/healthCheckValidator";
+import { Controller } from "../decorators/Controller";
+import { Route } from "../decorators/Route";
+import { Validate } from "../decorators/Validator";
+import { postHealthCheckValidation } from "../validators/HealthCheckValidator";
 
 @Controller()
 class MainController {

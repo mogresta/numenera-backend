@@ -1,5 +1,5 @@
 import { Express, RequestHandler } from "express";
-import { RouteHandler } from "../library/routes";
+import { RouteHandler } from "../library/Routes";
 
 export function defineRoutes(controllers: any, app: Express) {
   console.log("------------------------------");

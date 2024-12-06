@@ -1,108 +1,54 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Linux (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1deb3
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: numenera
--- ------------------------------------------------------
--- Server version	8.0.40-0ubuntu0.24.04.1
+-- Host: localhost:3306
+-- Generation Time: Dec 06, 2024 at 03:15 PM
+-- Server version: 8.0.40-0ubuntu0.24.04.1
+-- PHP Version: 8.3.6
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-DROP DATABASE IF EXISTS numenera;
-CREATE DATABASE numenera;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `plan_type`
+-- Database: `numenera`
 --
+CREATE DATABASE IF NOT EXISTS `numenera` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `numenera`;
 
-DROP TABLE IF EXISTS numenera.`plan_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`plan_type` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plan_type`
---
-
-LOCK TABLES numenera.`plan_type` WRITE;
-/*!40000 ALTER TABLE `plan_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `plan_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `source`
---
-
-DROP TABLE IF EXISTS numenera.`source`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`source` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `source`
---
-
-LOCK TABLES numenera.`source` WRITE;
-/*!40000 ALTER TABLE `source` DISABLE KEYS */;
-/*!40000 ALTER TABLE `source` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `artefact`
 --
 
-DROP TABLE IF EXISTS numenera.`artefact`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`artefact` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `artefact`;
+CREATE TABLE `artefact` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `level` int NOT NULL,
   `forms` text NOT NULL,
   `depletion` text NOT NULL,
-  `source_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `artefact_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `source_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `artefact`
---
-
-LOCK TABLES numenera.`artefact` WRITE;
-/*!40000 ALTER TABLE `artefact` DISABLE KEYS */;
-/*!40000 ALTER TABLE `artefact` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `automaton`
 --
 
-DROP TABLE IF EXISTS numenera.`automaton`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`automaton` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `automaton`;
+CREATE TABLE `automaton` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `level` int NOT NULL,
@@ -110,165 +56,423 @@ CREATE TABLE numenera.`automaton` (
   `depletion` text NOT NULL,
   `modification` text NOT NULL,
   `reproduction` text NOT NULL,
-  `source_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `automaton_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `source_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `automaton`
+-- Table structure for table `character`
 --
 
-LOCK TABLES numenera.`automaton` WRITE;
-/*!40000 ALTER TABLE `automaton` DISABLE KEYS */;
-/*!40000 ALTER TABLE `automaton` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `character`;
+CREATE TABLE `character` (
+  `id` int NOT NULL,
+  `name` text NOT NULL,
+  `description` text,
+  `tier` text NOT NULL,
+  `user_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `cypher`
 --
 
-DROP TABLE IF EXISTS numenera.`cypher`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`cypher` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `cypher`;
+CREATE TABLE `cypher` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `level` int NOT NULL,
   `forms` text NOT NULL,
-  `source_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `source_id` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`)
+  `source_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cypher`
---
-
-LOCK TABLES numenera.`cypher` WRITE;
-/*!40000 ALTER TABLE `cypher` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cypher` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `installation`
 --
 
-DROP TABLE IF EXISTS numenera.`installation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`installation` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `installation`;
+CREATE TABLE `installation` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `level` int NOT NULL,
   `material` text NOT NULL,
   `depletion` text NOT NULL,
   `modification` text NOT NULL,
-  `source_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `installation_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `source_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `installation`
+-- Table structure for table `inventory`
 --
 
-LOCK TABLES numenera.`installation` WRITE;
-/*!40000 ALTER TABLE `installation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `installation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `odity`
---
-
-DROP TABLE IF EXISTS numenera.`odity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`odity` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `description` text NOT NULL,
-  PRIMARY KEY (`id`)
+DROP TABLE IF EXISTS `inventory`;
+CREATE TABLE `inventory` (
+  `id` int NOT NULL,
+  `character_id` int NOT NULL,
+  `slots` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `odity`
+-- Table structure for table `inventory_item`
 --
 
-LOCK TABLES numenera.`odity` WRITE;
-/*!40000 ALTER TABLE `odity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `odity` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `inventory_item`;
+CREATE TABLE `inventory_item` (
+  `id` int NOT NULL,
+  `character_id` int NOT NULL,
+  `cypher_id` int DEFAULT NULL,
+  `automaton_id` int DEFAULT NULL,
+  `artefact_id` int DEFAULT NULL,
+  `installation_id` int DEFAULT NULL,
+  `oddity_id` int DEFAULT NULL,
+  `plan_id` int DEFAULT NULL,
+  `vehicle_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `oddity`
+--
+
+DROP TABLE IF EXISTS `oddity`;
+CREATE TABLE `oddity` (
+  `id` int NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `plan`
 --
 
-DROP TABLE IF EXISTS numenera.`plan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`plan` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `plan`;
+CREATE TABLE `plan` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `min_level` int NOT NULL,
   `source_id` int NOT NULL,
-  `plan_type_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  KEY `plan_type_id` (`plan_type_id`),
-  CONSTRAINT `plan_ibfk_1` FOREIGN KEY (`plan_type_id`) REFERENCES numenera.`plan_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `plan_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `plan_type_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `plan`
+-- Table structure for table `plan_type`
 --
 
-LOCK TABLES numenera.`plan` WRITE;
-/*!40000 ALTER TABLE `plan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `plan` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `plan_type`;
+CREATE TABLE `plan_type` (
+  `id` int NOT NULL,
+  `name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `source`
+--
+
+DROP TABLE IF EXISTS `source`;
+CREATE TABLE `source` (
+  `id` int NOT NULL,
+  `name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int NOT NULL,
+  `username` text NOT NULL,
+  `email` text NOT NULL,
+  `password` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `vehicle`
 --
 
-DROP TABLE IF EXISTS numenera.`vehicle`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE numenera.`vehicle` (
-  `id` int NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `vehicle`;
+CREATE TABLE `vehicle` (
+  `id` int NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `level` int NOT NULL,
   `material` text NOT NULL,
   `depletion` text NOT NULL,
   `modification` text NOT NULL,
-  `source_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES numenera.`source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `source_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `vehicle`
+-- Indexes for dumped tables
 --
 
-LOCK TABLES numenera.`vehicle` WRITE;
-/*!40000 ALTER TABLE `vehicle` DISABLE KEYS */;
-/*!40000 ALTER TABLE `vehicle` ENABLE KEYS */;
-UNLOCK TABLES;
+--
+-- Indexes for table `artefact`
+--
+ALTER TABLE `artefact`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`);
 
--- Dump completed on 2024-11-28 15:03:36
+--
+-- Indexes for table `automaton`
+--
+ALTER TABLE `automaton`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`);
+
+--
+-- Indexes for table `character`
+--
+ALTER TABLE `character`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `cypher`
+--
+ALTER TABLE `cypher`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`);
+
+--
+-- Indexes for table `installation`
+--
+ALTER TABLE `installation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`);
+
+--
+-- Indexes for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `character_id` (`character_id`);
+
+--
+-- Indexes for table `inventory_item`
+--
+ALTER TABLE `inventory_item`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `character_id` (`character_id`),
+  ADD KEY `cypher_id` (`cypher_id`),
+  ADD KEY `automaton_id` (`automaton_id`),
+  ADD KEY `artefact_id` (`artefact_id`),
+  ADD KEY `installation_id` (`installation_id`),
+  ADD KEY `oddity_id` (`oddity_id`),
+  ADD KEY `plan_id` (`plan_id`),
+  ADD KEY `vehicle_id` (`vehicle_id`);
+
+--
+-- Indexes for table `oddity`
+--
+ALTER TABLE `oddity`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `plan`
+--
+ALTER TABLE `plan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`),
+  ADD KEY `plan_type_id` (`plan_type_id`);
+
+--
+-- Indexes for table `plan_type`
+--
+ALTER TABLE `plan_type`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `source`
+--
+ALTER TABLE `source`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vehicle`
+--
+ALTER TABLE `vehicle`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `source_id` (`source_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `artefact`
+--
+ALTER TABLE `artefact`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `automaton`
+--
+ALTER TABLE `automaton`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `character`
+--
+ALTER TABLE `character`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cypher`
+--
+ALTER TABLE `cypher`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `installation`
+--
+ALTER TABLE `installation`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory`
+--
+ALTER TABLE `inventory`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory_item`
+--
+ALTER TABLE `inventory_item`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `oddity`
+--
+ALTER TABLE `oddity`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `plan`
+--
+ALTER TABLE `plan`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `plan_type`
+--
+ALTER TABLE `plan_type`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `source`
+--
+ALTER TABLE `source`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vehicle`
+--
+ALTER TABLE `vehicle`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `artefact`
+--
+ALTER TABLE `artefact`
+  ADD CONSTRAINT `artefact_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `automaton`
+--
+ALTER TABLE `automaton`
+  ADD CONSTRAINT `automaton_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `character`
+--
+ALTER TABLE `character`
+  ADD CONSTRAINT `character_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `cypher`
+--
+ALTER TABLE `cypher`
+  ADD CONSTRAINT `source_id` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`);
+
+--
+-- Constraints for table `installation`
+--
+ALTER TABLE `installation`
+  ADD CONSTRAINT `installation_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `inventory_item`
+--
+ALTER TABLE `inventory_item`
+  ADD CONSTRAINT `inventory_item_ibfk_1` FOREIGN KEY (`artefact_id`) REFERENCES `artefact` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_2` FOREIGN KEY (`automaton_id`) REFERENCES `automaton` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_3` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_4` FOREIGN KEY (`cypher_id`) REFERENCES `cypher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_5` FOREIGN KEY (`installation_id`) REFERENCES `installation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_6` FOREIGN KEY (`oddity_id`) REFERENCES `oddity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_7` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_8` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `plan`
+--
+ALTER TABLE `plan`
+  ADD CONSTRAINT `plan_ibfk_1` FOREIGN KEY (`plan_type_id`) REFERENCES `plan_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `plan_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `vehicle`
+--
+ALTER TABLE `vehicle`
+  ADD CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
