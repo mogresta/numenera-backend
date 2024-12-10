@@ -1,19 +1,18 @@
 # numenera-backend
 
-npm install - Install all packages 
-npm build - build the project
-npm run local - to start server in local environment
-npm run local:watch - start with nodemon
-npm run test - runs tests in the tests folder
-npm run lint - runs linter
-npm run format - formats the code with prettier
-
-Packages used:
-Express
-Node.js
-Typescript
-Mysql2
-
-MikroORM - ORM
-Dotenv - to work with env variables
-reflect-metadata
+npm install - Install all packages <br />
+npm build - build the project <br />
+npm run local - to start server in local environment <br />
+npm run local:watch - start with nodemon <br />
+npm run test - runs tests in the tests folder <br />
+npm run lint - runs linter <br />
+npm run format - formats the code with prettier <br />
+<br />
+Packages used: <br />
+Express <br />
+Node.js <br />
+Typescript <br />
+Mysql2 <br />
+<br />
+MikroORM - ORM <br />
+Dotenv - to work with env variables <br />
