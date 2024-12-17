@@ -1,4 +1,11 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  OneToMany,
+  Collection,
+} from "@mikro-orm/core";
+import { Character } from "./Character.entity";
 
 @Entity()
 export class User {
@@ -19,4 +26,7 @@ export class User {
 
   @Property({ onUpdate: () => new Date() })
   updatedAt: Date = new Date();
+
+  @OneToMany({ mappedBy: "user", eager: true, orphanRemoval: true })
+  characters = new Collection<Character>(this);
 }

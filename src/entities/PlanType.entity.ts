@@ -1,4 +1,11 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Collection,
+  Entity,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
+import { Plan } from "./Plan.entity";
 
 @Entity()
 export class PlanType {
@@ -7,4 +14,7 @@ export class PlanType {
 
   @Property()
   name!: string;
+
+  @OneToMany({ mappedBy: "planType", eager: true, orphanRemoval: true })
+  plans = new Collection<Plan>(this);
 }

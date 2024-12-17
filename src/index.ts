@@ -6,31 +6,33 @@ import { routeNotFound } from "./middlewares/RouteNotFound";
 import { config } from "./config/config";
 import "reflect-metadata";
 import { defineRoutes } from "./modules/Routes";
-import MainController from "./controllers/Main.controller";
 import { RequestContext } from "@mikro-orm/core";
 import { MikroORM } from "@mikro-orm/mysql";
+import UserController from "./controllers/User.controller";
+import MainController from "./controllers/Main.controller";
 
 export const app: Express = express();
 export let httpServer: ReturnType<typeof http.createServer>;
-export let orm: MikroORM;
+export let db: MikroORM;
 
 export const Main = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
   try {
-    orm = await Connect();
+    db = await Connect();
 
     app.use((req, res, next) => {
-      RequestContext.create(orm.em, next);
+      RequestContext.create(db.em, next);
     });
   } catch (error) {
     console.error(error);
+    await Shutdown();
   }
 
   app.use(corsHandler);
 
-  defineRoutes([MainController], app);
+  defineRoutes([MainController, UserController], app);
 
   app.use(routeNotFound);
 
@@ -40,13 +42,13 @@ export const Main = async () => {
   });
 };
 
-export const Shutdown = async (callback: any) => {
+export const Shutdown = async (callback?: any) => {
   if (httpServer) {
     httpServer.close(callback);
   }
 
-  if (orm) {
-    await orm.close();
+  if (db) {
+    await db.close();
   }
 };
 

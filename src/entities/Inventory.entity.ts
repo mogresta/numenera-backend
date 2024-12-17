@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Character } from "./Character.entity";
 
 @Entity()
@@ -9,6 +9,6 @@ export class Inventory {
   @Property()
   slots!: number;
 
-  @ManyToOne()
+  @OneToOne()
   character!: Character;
 }

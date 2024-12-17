@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
-import IUser from "../interfaces/User";
+import UserInterface from "../interfaces/User.interface";
 
 export const signJWT = (
-  user: IUser,
+  user: UserInterface,
   callback: (error: Error | null, token: string | null) => void,
 ): void => {
   const epochTime = new Date().getTime();

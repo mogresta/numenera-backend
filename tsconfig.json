@@ -6,6 +6,8 @@
     "rootDir": "./",
     "resolveJsonModule": true,
     "outDir": "./build",
+    "sourceMap": true,
+    "inlineSourceMap": false,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

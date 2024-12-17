@@ -9,7 +9,7 @@ import { Plan } from "./Plan.entity";
 import { Vehicle } from "./Vehicle.entity";
 
 @Entity()
-export class InventoryItem {
+export class GroupInventory {
   @PrimaryKey()
   id!: number;
 

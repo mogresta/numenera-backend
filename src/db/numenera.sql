@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 10, 2024 at 02:55 PM
+-- Generation Time: Dec 17, 2024 at 10:34 AM
 -- Server version: 8.0.40-0ubuntu0.24.04.1
 -- PHP Version: 8.3.6
 
@@ -87,6 +87,18 @@ CREATE TABLE `character_type` (
   `id` int NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `character_type`
+--
+
+INSERT INTO `character_type` (`id`, `name`) VALUES
+(1, 'Nano'),
+(2, 'Jack'),
+(3, 'Glaive'),
+(4, 'Arkus'),
+(5, 'Wright'),
+(6, 'Delve');
 
 -- --------------------------------------------------------
 
@@ -216,6 +228,17 @@ CREATE TABLE `plan_type` (
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `plan_type`
+--
+
+INSERT INTO `plan_type` (`id`, `name`) VALUES
+(1, 'Cypher'),
+(2, 'Installation'),
+(3, 'Artifact'),
+(4, 'Automaton'),
+(5, 'Vehicle');
+
 -- --------------------------------------------------------
 
 --
@@ -227,6 +250,31 @@ CREATE TABLE `source` (
   `id` int NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `source`
+--
+
+INSERT INTO `source` (`id`, `name`) VALUES
+(1, 'Destiny'),
+(2, 'Discovery'),
+(3, 'Building Tomorrow'),
+(4, 'Into the Deep'),
+(5, 'Technology Compendium'),
+(6, 'Artifacts & Oddities'),
+(7, 'Cypher Collection I'),
+(8, 'Extreme Cyphers'),
+(9, 'Edge of the Sun'),
+(10, 'Torment'),
+(11, 'Vertices'),
+(12, 'Liminal Shore'),
+(13, 'Voices of the Datasphere'),
+(14, 'Into the Outside'),
+(15, 'Priests of the Aeons'),
+(16, 'Love & Sex in the Ninth World'),
+(17, 'Exploring Numenera: Strand'),
+(18, 'Weird Discoveries'),
+(19, 'Explorer\'s Keys');
 
 -- --------------------------------------------------------
 
@@ -409,7 +457,7 @@ ALTER TABLE `character`
 -- AUTO_INCREMENT for table `character_type`
 --
 ALTER TABLE `character_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cypher`
@@ -457,13 +505,13 @@ ALTER TABLE `plan`
 -- AUTO_INCREMENT for table `plan_type`
 --
 ALTER TABLE `plan_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `source`
 --
 ALTER TABLE `source`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user`
