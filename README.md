@@ -1,4 +1,5 @@
 # numenera-backend
+BACKEND FOR A MOBILE APP - WORK IN PROGRESS
 
 npm install - Install all packages <br />
 npm build - build the project <br />
