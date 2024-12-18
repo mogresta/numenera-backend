@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 17, 2024 at 10:34 AM
+-- Generation Time: Dec 18, 2024 at 03:13 PM
 -- Server version: 8.0.40-0ubuntu0.24.04.1
 -- PHP Version: 8.3.6
 
@@ -73,7 +73,7 @@ CREATE TABLE `character` (
   `tier` text NOT NULL,
   `user_id` int NOT NULL,
   `type_id` int NOT NULL,
-  `deleted` tinyint(1) NOT NULL
+  `deleted` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -133,8 +133,8 @@ CREATE TABLE `group_inventory` (
   `oddity_id` int DEFAULT NULL,
   `plan_id` int DEFAULT NULL,
   `vehicle_id` int DEFAULT NULL,
-  `expended` tinyint(1) NOT NULL,
-  `loaned` tinyint(1) NOT NULL
+  `expended` tinyint(1) DEFAULT NULL,
+  `loaned` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -165,7 +165,7 @@ DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `id` int NOT NULL,
   `character_id` int NOT NULL,
-  `slots` int NOT NULL
+  `slots` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -177,7 +177,7 @@ CREATE TABLE `inventory` (
 DROP TABLE IF EXISTS `inventory_item`;
 CREATE TABLE `inventory_item` (
   `id` int NOT NULL,
-  `character_id` int NOT NULL,
+  `inventory_id` int NOT NULL,
   `cypher_id` int DEFAULT NULL,
   `automaton_id` int DEFAULT NULL,
   `artefact_id` int DEFAULT NULL,
@@ -185,8 +185,8 @@ CREATE TABLE `inventory_item` (
   `oddity_id` int DEFAULT NULL,
   `plan_id` int DEFAULT NULL,
   `vehicle_id` int DEFAULT NULL,
-  `group_inventory_id` int DEFAULT NULL,
-  `expended` tinyint(1) NOT NULL
+  `expended` tinyint(1) DEFAULT NULL,
+  `group_inventory_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -292,6 +292,13 @@ CREATE TABLE `user` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(4, 'Mario', 'mario@random.com', '$2a$10$NnEsyxlTPkTO2sI9DZQeu..wz7cryD/kY9atCbFSQfuhP8tBqfdDa', '2024-12-17 14:05:42', '2024-12-17 14:05:42');
+
 -- --------------------------------------------------------
 
 --
@@ -382,7 +389,6 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `inventory_item`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `character_id` (`character_id`),
   ADD KEY `cypher_id` (`cypher_id`),
   ADD KEY `automaton_id` (`automaton_id`),
   ADD KEY `artefact_id` (`artefact_id`),
@@ -390,6 +396,7 @@ ALTER TABLE `inventory_item`
   ADD KEY `oddity_id` (`oddity_id`),
   ADD KEY `plan_id` (`plan_id`),
   ADD KEY `vehicle_id` (`vehicle_id`),
+  ADD KEY `inventory_id` (`inventory_id`) USING BTREE,
   ADD KEY `group_inventory_id` (`group_inventory_id`);
 
 --
@@ -517,7 +524,7 @@ ALTER TABLE `source`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `vehicle`
@@ -585,13 +592,13 @@ ALTER TABLE `inventory`
 ALTER TABLE `inventory_item`
   ADD CONSTRAINT `inventory_item_ibfk_1` FOREIGN KEY (`artefact_id`) REFERENCES `artefact` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_2` FOREIGN KEY (`automaton_id`) REFERENCES `automaton` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `inventory_item_ibfk_3` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inventory_item_ibfk_3` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_4` FOREIGN KEY (`cypher_id`) REFERENCES `cypher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_5` FOREIGN KEY (`installation_id`) REFERENCES `installation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_6` FOREIGN KEY (`oddity_id`) REFERENCES `oddity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_7` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_8` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicle` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `inventory_item_ibfk_9` FOREIGN KEY (`group_inventory_id`) REFERENCES `group_inventory` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `inventory_item_ibfk_9` FOREIGN KEY (`group_inventory_id`) REFERENCES `group_inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `plan`

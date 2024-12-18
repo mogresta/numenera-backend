@@ -4,11 +4,12 @@ import {
   Property,
   OneToMany,
   Collection,
+  BaseEntity,
 } from "@mikro-orm/core";
 import { Character } from "./Character.entity";
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -22,10 +23,10 @@ export class User {
   password!: string;
 
   @Property()
-  createdAt: Date = new Date();
+  createdAt?: Date = new Date();
 
   @Property({ onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  updatedAt?: Date = new Date();
 
   @OneToMany({ mappedBy: "user", eager: true, orphanRemoval: true })
   characters = new Collection<Character>(this);

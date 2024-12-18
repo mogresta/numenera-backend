@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import UserInterface from "../interfaces/User.interface";
 
-export const signJWT = (
+export const signJWTService = (
   user: UserInterface,
   callback: (error: Error | null, token: string | null) => void,
 ): void => {

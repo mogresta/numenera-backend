@@ -9,6 +9,16 @@ import { defineRoutes } from "./modules/Routes";
 import { RequestContext } from "@mikro-orm/core";
 import { MikroORM } from "@mikro-orm/mysql";
 import UserController from "./controllers/User.controller";
+import ArtefactController from "./controllers/Artefact.controller";
+import AutomatonController from "./controllers/Automaton.controller";
+import CharacterController from "./controllers/Character.controller";
+import CypherController from "./controllers/Cypher.controller";
+import InstallationController from "./controllers/Installation.controller";
+import InventoryController from "./controllers/Inventory.controller";
+import InventoryItemController from "./controllers/InventoryItem.controller";
+import OddityController from "./controllers/Oddity.controller";
+import PlanController from "./controllers/Plan.controller";
+import VehicleController from "./controllers/Vehicle.controller";
 import MainController from "./controllers/Main.controller";
 
 export const app: Express = express();
@@ -32,7 +42,23 @@ export const Main = async () => {
 
   app.use(corsHandler);
 
-  defineRoutes([MainController, UserController], app);
+  defineRoutes(
+    [
+      MainController,
+      UserController,
+      ArtefactController,
+      AutomatonController,
+      CharacterController,
+      CypherController,
+      InstallationController,
+      InventoryController,
+      InventoryItemController,
+      OddityController,
+      PlanController,
+      VehicleController,
+    ],
+    app,
+  );
 
   app.use(routeNotFound);
 

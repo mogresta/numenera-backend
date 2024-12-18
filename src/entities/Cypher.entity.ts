@@ -1,8 +1,15 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Source } from "./Source.entity";
+import { Vehicle } from "./Vehicle.entity";
 
 @Entity()
-export class Cypher {
+export class Cypher extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -18,6 +25,6 @@ export class Cypher {
   @Property({ type: "text" })
   forms = "";
 
-  @ManyToOne()
+  @ManyToOne(() => Source, { ref: true })
   source!: Source;
 }

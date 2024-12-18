@@ -1,8 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Source } from "./Source.entity";
 
 @Entity()
-export class Artefact {
+export class Artefact extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -21,6 +27,6 @@ export class Artefact {
   @Property()
   depletion!: string;
 
-  @ManyToOne()
+  @ManyToOne(() => Source, { ref: true })
   source!: Source;
 }

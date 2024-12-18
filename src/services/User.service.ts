@@ -1,14 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import bcryptjs from "bcryptjs";
-import {
-  EntityManager,
-  Loaded,
-  PopulatePath,
-  RequestContext,
-} from "@mikro-orm/core";
+import { EntityManager, RequestContext } from "@mikro-orm/core";
 import { User } from "../entities/User.entity";
 import UserInterface from "../interfaces/User.interface";
-import { signJWT } from "./SignJWT";
+import { signJWTService } from "./SignJWT.service";
 
 export async function createUser(
   req: Request,
@@ -31,12 +26,11 @@ export async function createUser(
   const salt: string = bcryptjs.genSaltSync(10);
   userData.password = bcryptjs.hashSync(password, salt);
 
-  const user: User = em.create(User, {
-    ...userData,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const user: User = em.create(User, { ...userData });
+
   await em.persistAndFlush(user);
+
+  return res.status(200).json({ message: "User successfully created." });
 }
 
 export async function loginUser(
@@ -57,23 +51,23 @@ export async function loginUser(
     email,
   };
 
-  const user: User | null = await em.findOne(User, {
-    $or: [
-      { email: { $eq: userData.email } },
-      { username: { $eq: userData.username } },
-    ],
-  });
+  const user: User | null = await em.findOne(
+    User,
+    {
+      $or: [
+        { email: { $eq: userData.email } },
+        { username: { $eq: userData.username } },
+      ],
+    },
+    { populate: ["*"] },
+  );
 
-  if (!user) {
-    return res.status(404).json({ message: "Invalid username or email." });
-  }
-
-  if (!bcryptjs.compareSync(userData.password, user.password)) {
-    return res.status(401).json({ message: "Invalid password." });
+  if (!user || !bcryptjs.compareSync(userData.password, user.password)) {
+    return res.status(401).json({ message: "Invalid credentials." });
   }
 
   try {
-    signJWT(user, (_error, token) => {
+    signJWTService(user, (_error, token) => {
       if (_error) {
         return res.status(401).json({
           message: "Unable to Sign JWT",

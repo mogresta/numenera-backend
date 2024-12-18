@@ -1,8 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Source } from "./Source.entity";
 
 @Entity()
-export class Vehicle {
+export class Vehicle extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -24,6 +30,6 @@ export class Vehicle {
   @Property({ type: "text" })
   modification = "";
 
-  @ManyToOne()
+  @ManyToOne(() => Source, { ref: true })
   source!: Source;
 }

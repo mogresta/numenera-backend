@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Entity,
   ManyToOne,
   OneToOne,
@@ -6,9 +7,10 @@ import {
   Property,
 } from "@mikro-orm/core";
 import { User } from "./User.entity";
+import { Vehicle } from "./Vehicle.entity";
 
 @Entity()
-export class Character {
+export class Character extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -21,6 +23,9 @@ export class Character {
   @Property()
   tier!: number;
 
-  @ManyToOne()
+  @ManyToOne(() => User, { ref: true })
   user!: User;
+
+  @Property({ default: false, nullable: true })
+  deleted?: boolean;
 }

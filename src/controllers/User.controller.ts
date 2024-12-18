@@ -3,6 +3,11 @@ import { Controller } from "../decorators/Controller";
 import { Route } from "../decorators/Route";
 import { createUser, loginUser } from "../services/User.service";
 import { tokenValidation } from "../validators/ValidateToken";
+import { Validate } from "../decorators/Validator";
+import {
+  userLoginValidation,
+  userPostValidation,
+} from "../validators/UserValidator";
 
 @Controller()
 class UserController {
@@ -13,27 +18,19 @@ class UserController {
     return res.status(200).json({ message: "Token is valid" });
   }
 
-  @Route("post", "/register") async register(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  @Route("post", "/register")
+  @Validate(userPostValidation)
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       await createUser(req, res, next);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
-
-    return res
-      .status(200)
-      .json({ message: "UserInterface successfully created." });
   }
 
-  @Route("post", "/login") async login(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  @Route("post", "/login")
+  @Validate(userLoginValidation)
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       await loginUser(req, res, next);
     } catch (error) {

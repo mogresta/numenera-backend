@@ -1,9 +1,15 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Source } from "./Source.entity";
 import { PlanType } from "./PlanType.entity";
 
 @Entity()
-export class Plan {
+export class Plan extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -13,9 +19,9 @@ export class Plan {
   @Property()
   minLevel!: number;
 
-  @ManyToOne()
+  @ManyToOne(() => PlanType, { ref: true })
   planType!: PlanType;
 
-  @ManyToOne()
+  @ManyToOne(() => Source, { ref: true })
   source!: Source;
 }

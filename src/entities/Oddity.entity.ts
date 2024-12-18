@@ -1,7 +1,13 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 
 @Entity()
-export class Oddity {
+export class Oddity extends BaseEntity {
   @PrimaryKey()
   id!: number;
 

@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Collection,
   Entity,
   OneToMany,
@@ -14,7 +15,7 @@ import { Plan } from "./Plan.entity";
 import { Vehicle } from "./Vehicle.entity";
 
 @Entity()
-export class Source {
+export class Source extends BaseEntity {
   @PrimaryKey()
   id!: number;
 

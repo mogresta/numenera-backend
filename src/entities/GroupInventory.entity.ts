@@ -1,4 +1,10 @@
-import { Entity, ManyToOne, PrimaryKey } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Character } from "./Character.entity";
 import { Cypher } from "./Cypher.entity";
 import { Automaton } from "./Automaton.entity";
@@ -9,31 +15,37 @@ import { Plan } from "./Plan.entity";
 import { Vehicle } from "./Vehicle.entity";
 
 @Entity()
-export class GroupInventory {
+export class GroupInventory extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
-  @ManyToOne()
-  character!: Character;
+  @ManyToOne({ nullable: true, default: null })
+  character?: Character;
 
-  @ManyToOne({ nullable: true })
-  cypher!: Cypher;
+  @ManyToOne(() => Cypher, { ref: true, nullable: true, default: null })
+  cypher?: Cypher;
 
-  @ManyToOne({ nullable: true })
-  automaton!: Automaton;
+  @ManyToOne(() => Automaton, { ref: true, nullable: true, default: null })
+  automaton?: Automaton;
 
-  @ManyToOne({ nullable: true })
-  artefact!: Artefact;
+  @ManyToOne(() => Artefact, { ref: true, nullable: true, default: null })
+  artefact?: Artefact;
 
-  @ManyToOne({ nullable: true })
-  installation!: Installation;
+  @ManyToOne(() => Installation, { ref: true, nullable: true, default: null })
+  installation?: Installation;
 
-  @ManyToOne({ nullable: true })
-  oddity!: Oddity;
+  @ManyToOne(() => Oddity, { ref: true, nullable: true, default: null })
+  oddity?: Oddity;
 
-  @ManyToOne({ nullable: true })
-  plan!: Plan;
+  @ManyToOne(() => Plan, { ref: true, nullable: true, default: null })
+  plan?: Plan;
 
-  @ManyToOne({ nullable: true })
-  vehicle!: Vehicle;
+  @ManyToOne(() => Vehicle, { ref: true, nullable: true, default: null })
+  vehicle?: Vehicle;
+
+  @Property({ default: false, nullable: true })
+  expended?: boolean;
+
+  @Property({ default: false, nullable: true })
+  loaned?: boolean;
 }

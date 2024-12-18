@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Collection,
   Entity,
   OneToMany,
@@ -8,7 +9,7 @@ import {
 import { Plan } from "./Plan.entity";
 
 @Entity()
-export class PlanType {
+export class PlanType extends BaseEntity {
   @PrimaryKey()
   id!: number;
 

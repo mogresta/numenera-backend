@@ -1,8 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Source } from "./Source.entity";
 
 @Entity()
-export class Automaton {
+export class Automaton extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
@@ -27,6 +33,6 @@ export class Automaton {
   @Property({ type: "text" })
   reproduction = "";
 
-  @ManyToOne()
+  @ManyToOne(() => Source, { ref: true })
   source!: Source;
 }

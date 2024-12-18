@@ -1,14 +1,26 @@
-import { Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  BaseEntity,
+  Collection,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { Character } from "./Character.entity";
+import { InventoryItem } from "./InventoryItem.entity";
 
 @Entity()
-export class Inventory {
+export class Inventory extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
-  @Property()
-  slots!: number;
+  @Property({ nullable: true })
+  slots?: number;
 
-  @OneToOne()
+  @OneToOne(() => Character, { ref: true })
   character!: Character;
+
+  @OneToMany({ mappedBy: "inventory", eager: true, orphanRemoval: true })
+  items = new Collection<InventoryItem>(this);
 }

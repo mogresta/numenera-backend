@@ -5,3 +5,5 @@ import { Validate } from "../decorators/Validator";
 
 @Controller()
 class InventoryItemController {}
+
+export default InventoryItemController;
