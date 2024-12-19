@@ -9,9 +9,6 @@ import {
 import { Source } from "./Source.entity";
 import { PlanType } from "./PlanType.entity";
 import { Type } from "./Type.entity";
-import { PlanTypes } from "../enums/PlanType.enum";
-import { Types } from "../enums/Type.enum";
-import { Sources } from "../enums/Source.enum";
 
 @Entity()
 export class Item extends BaseEntity {
@@ -42,19 +39,12 @@ export class Item extends BaseEntity {
   @Property({ type: "text", nullable: true, default: null })
   reproduction?: string;
 
-  @Enum(() => Types)
   @ManyToOne(() => Type, { ref: true })
   type!: Type;
 
-  @Enum({ items: () => PlanTypes, nullable: true })
   @ManyToOne(() => PlanType, { ref: true, nullable: true, default: null })
   planType?: PlanType;
 
-  @Enum({ items: () => Sources, nullable: true })
   @ManyToOne(() => Source, { ref: true, nullable: true, default: null })
   source?: Source;
 }
-
-export { PlanTypes } from "../enums/PlanType.enum";
-export { Types } from "../enums/Type.enum";
-export { Sources } from "../enums/Source.enum";

@@ -16,6 +16,6 @@ export class Type extends BaseEntity {
   @Property()
   name!: string;
 
-  @OneToMany({ mappedBy: "item", eager: true, orphanRemoval: true })
+  @OneToMany({ mappedBy: "type", eager: true, orphanRemoval: true })
   items = new Collection<Item>(this);
 }

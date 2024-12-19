@@ -3,8 +3,8 @@ import { Item } from "../entities/Item.entity";
 import { EntityManager, RequestContext } from "@mikro-orm/core";
 import { Source } from "../entities/Source.entity";
 import { Type } from "../entities/Type.entity";
-import { Types } from "../entities/Item.entity";
-import { Sources } from "../entities/Item.entity";
+import { Types } from "../enums/Type.enum";
+import { Sources } from "../enums/Source.enum";
 
 export async function getAllItems(
   req: Request,
