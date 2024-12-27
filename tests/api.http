@@ -1,0 +1,73 @@
+@baseUrl = http://localhost:3000
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlvIiwiZW1haWwiOiJtYXJpb0ByYW5kb20uY29tIiwiaWF0IjoxNzM3MDE4OTQ3LCJleHAiOjM0NzYxOTc4OTQsImlzcyI6Im1hcmlvIn0.eA3G5EHxGLNDEceZZ6EF9flt2tc1BBoCy4RpOkRigPQ
+
+### Example: login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "identifier": "Mario",
+  "password": "lalala"
+}
+
+### Example: Get all items
+GET {{baseUrl}}/items/all
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Example: Get all items
+GET {{baseUrl}}/items/all?sources=1,2,3&types=1,2&planTypes=null
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Example: get specific item
+GET {{baseUrl}}/items/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Example: search item
+POST {{baseUrl}}/items/search
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "other"
+}
+
+### Example: User characters
+POST {{baseUrl}}/characters/all
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "user": "4"
+}
+
+### Example: User characters
+GET {{baseUrl}}/characters/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": "1",
+  "user": "4"
+}
+
+### Example: Group Inventory
+GET {{baseUrl}}/group-inventory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": "1",
+  "user": "4"
+}
+
+### Example: Group Inventory
+POST {{baseUrl}}/inventory
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "character": "1"
+}

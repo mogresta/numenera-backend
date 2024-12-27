@@ -1,8 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { Controller } from "../decorators/Controller";
 import { Route } from "../decorators/Route";
-import { createUser, loginUser } from "../services/User.service";
-import { tokenValidation } from "../validators/ValidateToken";
+import {
+  createUser,
+  loginUser,
+  updateUsername,
+  recoverPassword,
+  resetPassword,
+  getUserData,
+} from "../services/User.service";
+import {
+  emailTokenValidation,
+  tokenValidation,
+} from "../validators/ValidateToken";
 import { Validate } from "../decorators/Validator";
 import {
   userLoginValidation,
@@ -11,31 +21,42 @@ import {
 
 @Controller()
 class UserController {
-  @Route("get", "/validate")
+  @Route("get", "/validate", tokenValidation)
   validateToken(req: Request, res: Response, next: NextFunction) {
-    tokenValidation(req, res, next);
-
     return res.status(200).json({ message: "Token is valid" });
   }
 
   @Route("post", "/register")
   @Validate(userPostValidation)
   async register(req: Request, res: Response, next: NextFunction) {
-    try {
-      await createUser(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await createUser(req, res, next);
   }
 
   @Route("post", "/login")
   @Validate(userLoginValidation)
   async login(req: Request, res: Response, next: NextFunction) {
-    try {
-      await loginUser(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await loginUser(req, res, next);
+  }
+
+  @Route("post", "/update-username", tokenValidation)
+  async updateUsername(req: Request, res: Response, next: NextFunction) {
+    await updateUsername(req, res, next);
+  }
+
+  @Route("post", "/password-recovery")
+  async recoverPassword(req: Request, res: Response, next: NextFunction) {
+    await recoverPassword(req, res, next);
+  }
+
+  @Route("post", "/reset-password", emailTokenValidation)
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    await resetPassword(req, res, next);
+  }
+
+  @Route("post", "/user/profile", tokenValidation)
+  @Validate(userLoginValidation)
+  async getUserData(req: Request, res: Response, next: NextFunction) {
+    await getUserData(req, res, next);
   }
 }
 

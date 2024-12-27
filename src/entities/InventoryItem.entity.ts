@@ -18,7 +18,7 @@ export class InventoryItem extends BaseEntity {
   @ManyToOne(() => Inventory, { ref: true })
   inventory!: Inventory;
 
-  @ManyToOne(() => Item, { ref: true })
+  @ManyToOne(() => Item, { ref: true, eager: true })
   item!: Item;
 
   @OneToOne(() => GroupInventory, { ref: true, nullable: true, default: null })

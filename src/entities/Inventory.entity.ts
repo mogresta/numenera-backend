@@ -21,6 +21,6 @@ export class Inventory extends BaseEntity {
   @OneToOne(() => Character, { ref: true })
   character!: Character;
 
-  @OneToMany({ mappedBy: "inventory", eager: true, orphanRemoval: true })
+  @OneToMany({ mappedBy: "inventory", eager: false, orphanRemoval: true })
   items = new Collection<InventoryItem>(this);
 }

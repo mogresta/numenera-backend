@@ -11,7 +11,7 @@
     "build": "npm-run-all clean lint format test && tsc",
     "start": "node src",
     "local": "ts-node src",
-    "local:watch": "nodemon src -e ts,json --exec 'npm run local'",
+    "local:watch": "nodemon --inspect src -e ts,json --exec 'npm run local'",
     "test": "jest --config jest.config.ts --coverage",
     "lint": "eslint src",
     "format": "npx prettier --write src",
@@ -58,6 +58,7 @@
     "@mikro-orm/mysql": "^6.4.0",
     "@mikro-orm/reflection": "^6.4.0",
     "@types/mysql": "^2.15.26",
+    "@types/nodemailer": "^6.4.17",
     "axios": "^1.7.8",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
@@ -65,6 +66,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.4",
+    "nodemailer": "^6.9.16",
     "reflect-metadata": "^0.2.2"
   }
 }

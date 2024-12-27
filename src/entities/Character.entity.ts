@@ -7,6 +7,7 @@ import {
   Property,
 } from "@mikro-orm/core";
 import { User } from "./User.entity";
+import { CharacterType } from "./CharacterType.entity";
 
 @Entity()
 export class Character extends BaseEntity {
@@ -25,6 +26,9 @@ export class Character extends BaseEntity {
   @ManyToOne(() => User, { ref: true })
   user!: User;
 
-  @Property({ default: false, nullable: true })
+  @ManyToOne(() => CharacterType, { ref: true })
+  characterType!: CharacterType;
+
+  @Property({ default: false })
   deleted?: boolean;
 }

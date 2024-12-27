@@ -1,37 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import { Controller } from "../decorators/Controller";
 import { Route } from "../decorators/Route";
-import { getAllItems, getItem } from "../services/Item.service";
+import { findItem, getAllItems, getItem } from "../services/Item.service";
 import { tokenValidation } from "../validators/ValidateToken";
 
 @Controller()
 class ItemController {
-  @Route("get", "/items/all") async getAll(
+  @Route("get", "/items/all", tokenValidation) async getAll(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await getAllItems(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await getAllItems(req, res, next);
   }
 
-  @Route("get", "/items/:id") async getOne(
+  @Route("get", "/items/:id", tokenValidation) async getOne(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
+    await getItem(req, res, next);
+  }
 
-    try {
-      await getItem(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+  @Route("post", "/items/search", tokenValidation) async findItem(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    await findItem(req, res, next);
   }
 }
 

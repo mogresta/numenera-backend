@@ -4,68 +4,52 @@ import { Route } from "../decorators/Route";
 import { Validate } from "../decorators/Validator";
 import { tokenValidation } from "../validators/ValidateToken";
 import {
+  characterCreateValidation,
   characterDeleteValidation,
-  characterPostValidation,
+  characterUpdateValidation,
 } from "../validators/CharacterValidator";
 import {
   getAllCharacters,
   getCharacter,
   createCharacter,
   deleteCharacter,
+  updateCharacter,
 } from "../services/Character.service";
 
 @Controller()
 class CharacterController {
-  @Route("get", "/characters/all") async getAll(
+  @Route("post", "/characters/all", tokenValidation) async getAll(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await getAllCharacters(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await getAllCharacters(req, res, next);
   }
 
-  @Route("get", "/characters/:id") async getOne(
+  @Route("get", "/characters/:id", tokenValidation) async getOne(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await getCharacter(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await getCharacter(req, res, next);
   }
 
-  @Route("post", "/characters/create")
-  @Validate(characterPostValidation)
+  @Route("post", "/characters/create", tokenValidation)
+  @Validate(characterCreateValidation)
   async create(req: Request, res: Response, next: NextFunction) {
-    tokenValidation(req, res, next);
-
-    try {
-      await createCharacter(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await createCharacter(req, res, next);
   }
 
-  @Route("post", "/characters/delete/:id")
+  @Route("delete", "/characters/delete/:id", tokenValidation)
   @Validate(characterDeleteValidation)
   async delete(req: Request, res: Response, next: NextFunction) {
-    tokenValidation(req, res, next);
+    await deleteCharacter(req, res, next);
+  }
 
-    try {
-      await deleteCharacter(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+  @Route("patch", "/characters/update", tokenValidation)
+  @Validate(characterUpdateValidation)
+  async update(req: Request, res: Response, next: NextFunction) {
+    await updateCharacter(req, res, next);
   }
 }
 

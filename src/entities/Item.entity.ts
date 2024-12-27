@@ -1,10 +1,10 @@
 import {
   BaseEntity,
   Entity,
-  Enum,
   ManyToOne,
   PrimaryKey,
   Property,
+  Index,
 } from "@mikro-orm/core";
 import { Source } from "./Source.entity";
 import { PlanType } from "./PlanType.entity";
@@ -15,7 +15,8 @@ export class Item extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
-  @Property()
+  @Index({ type: "fulltext" })
+  @Property({ type: "text" })
   name!: string;
 
   @Property({ type: "text", lazy: true })
@@ -39,12 +40,22 @@ export class Item extends BaseEntity {
   @Property({ type: "text", nullable: true, default: null })
   reproduction?: string;
 
-  @ManyToOne(() => Type, { ref: true })
+  @ManyToOne(() => Type, { ref: true, eager: true })
   type!: Type;
 
-  @ManyToOne(() => PlanType, { ref: true, nullable: true, default: null })
+  @ManyToOne(() => PlanType, {
+    ref: true,
+    nullable: true,
+    default: null,
+    eager: true,
+  })
   planType?: PlanType;
 
-  @ManyToOne(() => Source, { ref: true, nullable: true, default: null })
+  @ManyToOne(() => Source, {
+    ref: true,
+    nullable: true,
+    default: null,
+    eager: true,
+  })
   source?: Source;
 }

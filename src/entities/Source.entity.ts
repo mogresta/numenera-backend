@@ -16,6 +16,6 @@ export class Source extends BaseEntity {
   @Property()
   name!: string;
 
-  @OneToMany({ mappedBy: "source", eager: true, orphanRemoval: true })
+  @OneToMany({ mappedBy: "source", eager: false, orphanRemoval: true })
   artefacts = new Collection<Item>(this);
 }

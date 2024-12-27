@@ -1,12 +1,7 @@
 import Joi from "joi";
 
 export const userLoginValidation = Joi.object({
-  username: Joi.string().when("email", {
-    is: Joi.exist(),
-    then: Joi.allow(""),
-  }),
-  email: Joi.string().when("name", { is: Joi.exist(), then: Joi.allow("") }),
-  token: Joi.string().required(),
+  identifier: Joi.string().required(),
   password: Joi.string().required(),
 });
 

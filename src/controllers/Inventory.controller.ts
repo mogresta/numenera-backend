@@ -12,46 +12,28 @@ import {
 
 @Controller()
 class InventoryController {
-  @Route("get", "/inventory") async getOne(
+  @Route("post", "/inventory", tokenValidation) async getOne(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await getInventory(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await getInventory(req, res, next);
   }
 
-  @Route("post", "/inventory/add") async addItem(
+  @Route("post", "/inventory/add", tokenValidation) async addItem(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await addItemToInventory(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await addItemToInventory(req, res, next);
   }
 
-  @Route("post", "/inventory/expend") async expendItem(
+  @Route("patch", "/inventory/expend", tokenValidation) async expendItem(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    tokenValidation(req, res, next);
-
-    try {
-      await expendItemFromInventory(req, res, next);
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
+    await expendItemFromInventory(req, res, next);
   }
 }
 

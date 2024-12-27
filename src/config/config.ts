@@ -20,6 +20,10 @@ const SERVER_PORT = process.env.SERVER_PORT
 const SERVER_TOKEN_EXPIRETIME = process.env.SERVER_TOKEN_EXPIRETIME || 21600;
 const SERVER_TOKEN_ISSUER = process.env.SERVER_TOKEN_ISSUER || "mario";
 const SERVER_TOKEN_SECRET = process.env.SERVER_TOKEN_SECRET || "defaultSecret";
+const SERVER_DOMAIN = process.env.SERVER_DOMAIN || "http://localhost:3000";
+
+const SERVER_EMAIL = process.env.EMAIL;
+const SERVER_EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
 const SERVER = {
   serverport: SERVER_PORT,
@@ -27,6 +31,7 @@ const SERVER = {
   expiryTime: SERVER_TOKEN_EXPIRETIME,
   issuer: SERVER_TOKEN_ISSUER,
   secret: SERVER_TOKEN_SECRET,
+  domain: SERVER_DOMAIN,
 };
 
 const DATABASE = {

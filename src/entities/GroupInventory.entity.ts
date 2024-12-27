@@ -13,10 +13,10 @@ export class GroupInventory extends BaseEntity {
   @PrimaryKey()
   id!: number;
 
-  @ManyToOne({ nullable: true, default: null })
+  @ManyToOne({ nullable: true, default: null, eager: true })
   character?: Character;
 
-  @ManyToOne(() => Item, { ref: true })
+  @ManyToOne(() => Item, { ref: true, eager: true })
   item!: Item;
 
   @Property({ default: false, nullable: true })

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 19, 2024 at 02:23 PM
+-- Generation Time: Jan 14, 2025 at 05:47 PM
 -- Server version: 8.0.40-0ubuntu0.24.04.1
 -- PHP Version: 8.3.6
 
@@ -29,7 +29,6 @@ USE `numenera`;
 -- Table structure for table `character`
 --
 
-DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character` (
   `id` int NOT NULL,
   `name` text NOT NULL,
@@ -37,8 +36,15 @@ CREATE TABLE `character` (
   `tier` text NOT NULL,
   `user_id` int NOT NULL,
   `type_id` int NOT NULL,
-  `deleted` tinyint(1) DEFAULT NULL
+  `deleted` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `character`
+--
+
+INSERT INTO `character` (`id`, `name`, `description`, `tier`, `user_id`, `type_id`, `deleted`) VALUES
+(1, 'Doofus', 'Test character', '1', 4, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -46,7 +52,6 @@ CREATE TABLE `character` (
 -- Table structure for table `character_type`
 --
 
-DROP TABLE IF EXISTS `character_type`;
 CREATE TABLE `character_type` (
   `id` int NOT NULL,
   `name` text NOT NULL
@@ -70,14 +75,20 @@ INSERT INTO `character_type` (`id`, `name`) VALUES
 -- Table structure for table `group_inventory`
 --
 
-DROP TABLE IF EXISTS `group_inventory`;
 CREATE TABLE `group_inventory` (
   `id` int NOT NULL,
-  `character_id` int NOT NULL,
+  `character_id` int DEFAULT NULL,
   `item_id` int NOT NULL,
   `expended` tinyint(1) DEFAULT NULL,
   `loaned` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `group_inventory`
+--
+
+INSERT INTO `group_inventory` (`id`, `character_id`, `item_id`, `expended`, `loaned`) VALUES
+(1, 1, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -85,12 +96,18 @@ CREATE TABLE `group_inventory` (
 -- Table structure for table `inventory`
 --
 
-DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `id` int NOT NULL,
   `character_id` int NOT NULL,
   `slots` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`id`, `character_id`, `slots`) VALUES
+(1, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -98,7 +115,6 @@ CREATE TABLE `inventory` (
 -- Table structure for table `inventory_item`
 --
 
-DROP TABLE IF EXISTS `inventory_item`;
 CREATE TABLE `inventory_item` (
   `id` int NOT NULL,
   `inventory_id` int NOT NULL,
@@ -107,13 +123,19 @@ CREATE TABLE `inventory_item` (
   `group_inventory_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `inventory_item`
+--
+
+INSERT INTO `inventory_item` (`id`, `inventory_id`, `item_id`, `expended`, `group_inventory_id`) VALUES
+(1, 1, 1, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `item`
 --
 
-DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
   `id` int NOT NULL,
   `name` text NOT NULL,
@@ -124,10 +146,18 @@ CREATE TABLE `item` (
   `material` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `modification` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `reproduction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `type` int DEFAULT NULL,
-  `plan_type` int DEFAULT NULL,
-  `source` int DEFAULT NULL
+  `type_id` int DEFAULT NULL,
+  `plan_type_id` int DEFAULT NULL,
+  `source_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `item`
+--
+
+INSERT INTO `item` (`id`, `name`, `description`, `level`, `forms`, `depletion`, `material`, `modification`, `reproduction`, `type_id`, `plan_type_id`, `source_id`) VALUES
+(1, 'Test Item', 'This item is only for testing purposes', 2, 'thingamabobbit', '1d10', 'made of stuff', 'none', 'none', 1, NULL, 1),
+(2, 'Other test Item', 'Another testing item', 2, 'pillow', '1d6', 'fluff', 'none', 'none', 2, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -135,7 +165,6 @@ CREATE TABLE `item` (
 -- Table structure for table `plan_type`
 --
 
-DROP TABLE IF EXISTS `plan_type`;
 CREATE TABLE `plan_type` (
   `id` int NOT NULL,
   `name` text NOT NULL
@@ -158,7 +187,6 @@ INSERT INTO `plan_type` (`id`, `name`) VALUES
 -- Table structure for table `source`
 --
 
-DROP TABLE IF EXISTS `source`;
 CREATE TABLE `source` (
   `id` int NOT NULL,
   `name` text NOT NULL
@@ -195,7 +223,6 @@ INSERT INTO `source` (`id`, `name`) VALUES
 -- Table structure for table `type`
 --
 
-DROP TABLE IF EXISTS `type`;
 CREATE TABLE `type` (
   `id` int NOT NULL,
   `name` text NOT NULL
@@ -220,7 +247,6 @@ INSERT INTO `type` (`id`, `name`) VALUES
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int NOT NULL,
   `username` text NOT NULL,
@@ -284,9 +310,9 @@ ALTER TABLE `inventory_item`
 --
 ALTER TABLE `item`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type`),
-  ADD KEY `plan_type` (`plan_type`),
-  ADD KEY `source` (`source`);
+  ADD KEY `type` (`type_id`),
+  ADD KEY `plan_type` (`plan_type_id`),
+  ADD KEY `source` (`source_id`);
 
 --
 -- Indexes for table `plan_type`
@@ -320,7 +346,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `character`
 --
 ALTER TABLE `character`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `character_type`
@@ -332,25 +358,25 @@ ALTER TABLE `character_type`
 -- AUTO_INCREMENT for table `group_inventory`
 --
 ALTER TABLE `group_inventory`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `inventory_item`
 --
 ALTER TABLE `inventory_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `plan_type`
@@ -407,6 +433,14 @@ ALTER TABLE `inventory_item`
   ADD CONSTRAINT `inventory_item_ibfk_1` FOREIGN KEY (`inventory_id`) REFERENCES `inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `inventory_item_ibfk_3` FOREIGN KEY (`group_inventory_id`) REFERENCES `group_inventory` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `item`
+--
+ALTER TABLE `item`
+  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`plan_type_id`) REFERENCES `plan_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `item_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `source` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `item_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
