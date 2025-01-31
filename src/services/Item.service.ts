@@ -7,7 +7,9 @@ import { Sources } from "../enums/Source.enum";
 import { ServiceError } from "../utils/Service.error";
 import { BaseService } from "./Base.service";
 import { NotFoundError } from "../utils/NotFound.error";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class ItemService extends BaseService {
   async getAllItems(
     sources: number[] = [],

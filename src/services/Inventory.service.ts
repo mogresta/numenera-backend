@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import { Inventory } from "../entities/Inventory.entity";
 import { InventoryItem } from "../entities/InventoryItem.entity";
 import { GroupInventory } from "../entities/GroupInventory.entity";
@@ -8,7 +7,9 @@ import { Item } from "../entities/Item.entity";
 import { BaseService } from "./Base.service";
 import { NotFoundError } from "../utils/NotFound.error";
 import { ServiceError } from "../utils/Service.error";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class InventoryService extends BaseService {
   async getInventory(characterId: number) {
     const em = this.getEntityManager();

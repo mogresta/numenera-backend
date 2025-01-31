@@ -6,7 +6,7 @@ import { GroupInventoryService } from "../services/GroupInventory.service";
 import { ServiceError } from "../utils/Service.error";
 
 @Controller()
-class InventoryController {
+class GroupInventoryController {
   constructor(private groupInventoryService: GroupInventoryService) {}
 
   @Route("get", "/group-inventory", tokenValidation) async getOne(
@@ -22,7 +22,7 @@ class InventoryController {
       if (error instanceof ServiceError) {
         return res.status(500).json({ message: error.message });
       }
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" + error });
     }
   }
 
@@ -81,4 +81,4 @@ class InventoryController {
   }
 }
 
-export default InventoryController;
+export default GroupInventoryController;

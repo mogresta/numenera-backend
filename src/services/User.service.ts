@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 import { User } from "../entities/User.entity";
 import UserLoginInterface from "../interfaces/UserLogin.interface";
@@ -7,7 +6,9 @@ import { JWTService, passwordRecoveryEmail } from "./JWT.service";
 import { BaseService } from "./Base.service";
 import { ServiceError } from "../utils/Service.error";
 import { NotFoundError } from "../utils/NotFound.error";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class UserService extends BaseService {
   async createUser(username: string, password: string, email: string) {
     const em = this.getEntityManager();

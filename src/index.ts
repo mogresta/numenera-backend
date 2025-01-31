@@ -5,7 +5,7 @@ import { corsHandler } from "./middlewares/CorsHandler";
 import { routeNotFound } from "./middlewares/RouteNotFound";
 import { config } from "./config/config";
 import "reflect-metadata";
-import { defineRoutes } from "./modules/Routes";
+import { Routes } from "./modules/Routes";
 import { RequestContext } from "@mikro-orm/core";
 import { MikroORM } from "@mikro-orm/mysql";
 import UserController from "./controllers/User.controller";
@@ -14,6 +14,14 @@ import CharacterController from "./controllers/Character.controller";
 import InventoryController from "./controllers/Inventory.controller";
 import MainController from "./controllers/Main.controller";
 import GroupInventoryController from "./controllers/GroupInventory.controller";
+import RandomGeneratorController from "./controllers/RandomGenerator.controller";
+import { Container } from "./modules/Container";
+import { RandomGeneratorService } from "./services/RandomGenerator.service";
+import { CharacterService } from "./services/Character.service";
+import { GroupInventoryService } from "./services/GroupInventory.service";
+import { InventoryService } from "./services/Inventory.service";
+import { ItemService } from "./services/Item.service";
+import { UserService } from "./services/User.service";
 
 export const app: Express = express();
 export let httpServer: ReturnType<typeof http.createServer>;
@@ -36,7 +44,16 @@ export const Main = async () => {
 
   app.use(corsHandler);
 
-  defineRoutes(
+  Container.registerServices([
+    CharacterService,
+    GroupInventoryService,
+    InventoryService,
+    ItemService,
+    RandomGeneratorService,
+    UserService,
+  ]);
+
+  Routes.defineRoutes(
     [
       MainController,
       UserController,
@@ -44,6 +61,7 @@ export const Main = async () => {
       CharacterController,
       InventoryController,
       GroupInventoryController,
+      RandomGeneratorController,
     ],
     app,
   );

@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { tokenValidation } from "../validators/ValidateToken";
 import { RandomGeneratorService } from "../services/RandomGenerator.service";
 import { ServiceError } from "../utils/Service.error";
+import InventoryController from "./Inventory.controller";
 
 @Controller()
 class RandomGeneratorController {
@@ -26,3 +27,5 @@ class RandomGeneratorController {
     }
   }
 }
+
+export default RandomGeneratorController;

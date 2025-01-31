@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from "express";
 import { EntityManager } from "@mikro-orm/core";
 import { GroupInventory } from "../entities/GroupInventory.entity";
 import GroupInventoryItemInterface from "../interfaces/GroupInventoryItem.interface";
@@ -8,7 +7,9 @@ import { Item } from "../entities/Item.entity";
 import { BaseService } from "./Base.service";
 import { NotFoundError } from "../utils/NotFound.error";
 import { ServiceError } from "../utils/Service.error";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class GroupInventoryService extends BaseService {
   constructor(private inventoryService: InventoryService) {
     super();

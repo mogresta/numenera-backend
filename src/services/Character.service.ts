@@ -8,7 +8,9 @@ import { CharacterTypes } from "../enums/CharacterType.enum";
 import { User } from "../entities/User.entity";
 import { ServiceError } from "../utils/Service.error";
 import { BaseService } from "./Base.service";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class CharacterService extends BaseService {
   async getAllCharacters(userId: number) {
     const em = this.getEntityManager();

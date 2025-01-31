@@ -6,7 +6,7 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "identifier": "Mario",
+  "identifier": "Mario O",
   "password": "lalala"
 }
 
@@ -57,11 +57,6 @@ Content-Type: application/json
 GET {{baseUrl}}/group-inventory
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
-
-{
-  "id": "1",
-  "user": "4"
-}
 
 ### Example: Group Inventory
 POST {{baseUrl}}/inventory

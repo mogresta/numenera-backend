@@ -2,7 +2,9 @@ import { Item } from "../entities/Item.entity";
 import { BaseService } from "./Base.service";
 import { NotFoundError } from "../utils/NotFound.error";
 import { ServiceError } from "../utils/Service.error";
+import { Service } from "../decorators/Service";
 
+@Service()
 export class RandomGeneratorService extends BaseService {
   getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);

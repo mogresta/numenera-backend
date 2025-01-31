@@ -30,6 +30,7 @@ class UserController {
     try {
       const { username, password, email } = req.body;
 
+      console.log(this.userService);
       await this.userService.createUser(username, password, email);
 
       return res.status(200).json({ message: "User successfully created." });
@@ -69,6 +70,7 @@ class UserController {
           error: error.message,
         });
       }
+      console.log(error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
