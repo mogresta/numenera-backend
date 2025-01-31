@@ -1,127 +1,119 @@
-import { NextFunction, Request, Response } from "express";
 import { Item } from "../entities/Item.entity";
-import { EntityManager, RequestContext } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/core";
 import { Source } from "../entities/Source.entity";
 import { Type } from "../entities/Type.entity";
 import { Types } from "../enums/Type.enum";
 import { Sources } from "../enums/Source.enum";
+import { ServiceError } from "../utils/Service.error";
+import { BaseService } from "./Base.service";
+import { NotFoundError } from "../utils/NotFound.error";
 
-export async function getAllItems(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  console.log(req.query);
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const sources: number[] = req.query.sources
-    ? String(req.query.sources).split(",").map(Number)
-    : [];
-  const types: number[] = req.query.types
-    ? String(req.query.types).split(",").map(Number)
-    : [];
-  const planTypes: number[] = req.query.types
-    ? String(req.query.planTypes).split(",").map(Number)
-    : [];
+export class ItemService extends BaseService {
+  async getAllItems(
+    sources: number[] = [],
+    types: number[] = [],
+    planTypes: number[] = [],
+  ) {
+    const em = this.getEntityManager();
 
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
-  }
-
-  const mappedSources: number[] = [];
-  const mappedTypes: number[] = [];
-  const mappedPlanTypes: number[] = [];
-  const whereClause: any = {};
-
-  if (sources.length > 0 && sources.every((source) => !isNaN(source))) {
-    await Promise.all(
-      sources.map((source) => {
-        const sourceEnum: Sources = Number(source);
-        const ref: Source = em.getReference(Source, sourceEnum);
-
-        mappedSources.push(ref.id);
-      }),
+    const whereClause = await this.buildWhereClause(
+      em,
+      sources,
+      types,
+      planTypes,
     );
 
-    whereClause.source = { $in: [...mappedSources] };
+    try {
+      return await em.find(Item, whereClause, {
+        fields: ["id", "name", "type", "source", "planType"],
+      });
+    } catch (error) {
+      throw new ServiceError("Error searching for items");
+    }
   }
 
-  if (types.length > 0 && types.every((type) => !isNaN(type))) {
-    await Promise.all(
-      types.map((type) => {
-        const typeEnum: Types = Number(type);
-        const ref: Type = em.getReference(Type, typeEnum);
+  async getItem(id: number) {
+    const em = this.getEntityManager();
 
-        mappedTypes.push(ref.id);
-      }),
-    );
-
-    whereClause.type = { $in: [...mappedTypes] };
+    try {
+      const item = await em.findOne(Item, { id });
+      if (!item) {
+        throw new NotFoundError("Item not found");
+      }
+      return item;
+    } catch (error) {
+      if (error instanceof NotFoundError) throw error;
+      throw new ServiceError("Error searching for item");
+    }
   }
 
-  if (planTypes.length > 0 && planTypes.every((planType) => !isNaN(planType))) {
-    await Promise.all(
-      planTypes.map((planType) => {
-        const planTypeEnum: Types = Number(planType);
-        const ref: Type = em.getReference(Type, planTypeEnum);
+  async findItem(name: string) {
+    const em = this.getEntityManager();
 
-        mappedPlanTypes.push(ref.id);
-      }),
-    );
+    try {
+      const items = await em.find(Item, {
+        name: { $like: `%${name}%` },
+      });
 
-    whereClause.planType = { $in: [...mappedPlanTypes] };
+      return items;
+    } catch (error) {
+      throw new ServiceError("Error searching for items");
+    }
   }
 
-  try {
-    const items = await em.find(Item, whereClause, {
-      fields: ["id", "name", "type", "source", "planType"],
-    });
+  async buildWhereClause(
+    em: EntityManager,
+    sources: number[],
+    types: number[],
+    planTypes: number[],
+  ) {
+    const mappedSources: number[] = [];
+    const mappedTypes: number[] = [];
+    const mappedPlanTypes: number[] = [];
+    const whereClause: any = {};
 
-    return res.status(200).json({ items });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Error searching for items", error });
-  }
-}
+    if (sources.length > 0 && sources.every((source) => !isNaN(source))) {
+      await Promise.all(
+        sources.map((source) => {
+          const sourceEnum: Sources = Number(source);
+          const ref: Source = em.getReference(Source, sourceEnum);
 
-export async function getItem(req: Request, res: Response, next: NextFunction) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const id: number = Number(req.params.id);
+          mappedSources.push(ref.id);
+        }),
+      );
 
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
-  }
+      whereClause.source = { $in: [...mappedSources] };
+    }
 
-  try {
-    const item: Item | null = await em.findOne(Item, { id });
+    if (types.length > 0 && types.every((type) => !isNaN(type))) {
+      await Promise.all(
+        types.map((type) => {
+          const typeEnum: Types = Number(type);
+          const ref: Type = em.getReference(Type, typeEnum);
 
-    return res.status(200).json({ item });
-  } catch (error) {
-    return res.status(500).json({ message: "Error searching for item", error });
-  }
-}
+          mappedTypes.push(ref.id);
+        }),
+      );
 
-export async function findItem(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const name: string = req.body.name;
+      whereClause.type = { $in: [...mappedTypes] };
+    }
 
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
-  }
+    if (
+      planTypes.length > 0 &&
+      planTypes.every((planType) => !isNaN(planType))
+    ) {
+      await Promise.all(
+        planTypes.map((planType) => {
+          const planTypeEnum: Types = Number(planType);
+          const ref: Type = em.getReference(Type, planTypeEnum);
 
-  try {
-    const items = await em.find(Item, {
-      name: { $like: `%${name}%` },
-    });
+          mappedPlanTypes.push(ref.id);
+        }),
+      );
 
-    return res.status(200).json({ items });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Error searching for items", error });
+      whereClause.planType = { $in: [...mappedPlanTypes] };
+    }
+
+    return whereClause;
   }
 }

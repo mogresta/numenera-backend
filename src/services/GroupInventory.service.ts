@@ -1,145 +1,114 @@
 import { NextFunction, Request, Response } from "express";
-import { EntityManager, Loaded, RequestContext } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/core";
 import { GroupInventory } from "../entities/GroupInventory.entity";
 import GroupInventoryItemInterface from "../interfaces/GroupInventoryItem.interface";
 import { Character } from "../entities/Character.entity";
-import {
-  addItemToInventory,
-  deleteItemFromInventory,
-} from "./Inventory.service";
+import { InventoryService } from "./Inventory.service";
 import { Item } from "../entities/Item.entity";
+import { BaseService } from "./Base.service";
+import { NotFoundError } from "../utils/NotFound.error";
+import { ServiceError } from "../utils/Service.error";
 
-export async function getGroupInventory(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
+export class GroupInventoryService extends BaseService {
+  constructor(private inventoryService: InventoryService) {
+    super();
   }
 
-  try {
-    const inventory = await em.findAll(GroupInventory);
+  async getGroupInventory() {
+    const em = this.getEntityManager();
 
-    return res.status(200).json({ inventory: [...inventory] });
-  } catch (error) {
-    return res.status(500).json({ message: "Group Inventory error:", error });
-  }
-}
+    try {
+      const inventory = await em.findAll(GroupInventory);
 
-export async function loanItemFromGroupInventory(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const groupInventory: number = Number(req.body.groupInventory);
-  const character: number = Number(req.body.character);
-
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
+      return inventory;
+    } catch (error) {
+      throw new NotFoundError("Group Inventory error.");
+    }
   }
 
-  const inventoryItem: GroupInventory | null = await em.findOne(
-    GroupInventory,
-    { id: groupInventory },
-  );
+  async addItemToGroupInventory(item: number, inventoryItemId: number) {
+    const em = this.getEntityManager();
 
-  if (!inventoryItem) {
-    return res.status(500).json({ message: "Item not found" });
+    if (inventoryItemId) {
+      return await this.returnItemToGroupInventory(inventoryItemId, em);
+    }
+
+    try {
+      const inventoryItemData: GroupInventoryItemInterface = {
+        item: em.getReference(Item, item),
+        character: null,
+        expended: false,
+        loaned: false,
+      };
+
+      const inventoryItem: GroupInventory = em.create(GroupInventory, {
+        ...inventoryItemData,
+      });
+      await em.persistAndFlush(inventoryItem);
+    } catch (error: any) {
+      throw new ServiceError(
+        "Add Item to Group Inventory Error." + error.message,
+      );
+    }
   }
 
-  try {
-    inventoryItem.assign({
-      character: em.getReference(Character, character),
-      loaned: true,
-    });
+  async loanItemFromGroupInventory(groupInventory: number, character: number) {
+    const em = this.getEntityManager();
 
-    await em.persistAndFlush(inventoryItem);
-
-    req.body.item = inventoryItem.item.id;
-    await addItemToInventory(req, res, next);
-
-    return res.status(200).json({ ...inventoryItem });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Group Item update unsuccessful:", error });
-  }
-}
-
-export async function addItemToGroupInventory(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const item: number = Number(req.body.item);
-  const inventoryItemId: number | undefined = Number(req.body.groupInventory);
-
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
-  }
-
-  if (inventoryItemId) {
-    return await returnItemToGroupInventory(
-      inventoryItemId,
-      req,
-      res,
-      next,
-      em,
+    const inventoryItem: GroupInventory | null = await em.findOne(
+      GroupInventory,
+      { id: groupInventory },
     );
+
+    if (!inventoryItem) {
+      throw new NotFoundError("Item not found.");
+    }
+
+    try {
+      inventoryItem.assign({
+        character: em.getReference(Character, character),
+        loaned: true,
+      });
+
+      await em.persistAndFlush(inventoryItem);
+
+      await this.inventoryService.addItemToInventory(
+        character,
+        inventoryItem.item.id,
+        groupInventory,
+      );
+    } catch (error: any) {
+      throw new ServiceError(
+        "Loaning Items from Group Inventory Error: " + error.message,
+      );
+    }
   }
 
-  try {
-    const inventoryItemData: GroupInventoryItemInterface = {
-      item: em.getReference(Item, item),
-      character: null,
-      expended: false,
-      loaned: false,
-    };
+  async returnItemToGroupInventory(
+    groupInventoryItemId: number,
+    em: EntityManager,
+  ) {
+    const groupInventoryItem: GroupInventory | null = await em.findOne(
+      GroupInventory,
+      { id: groupInventoryItemId },
+    );
 
-    const inventoryItem: GroupInventory = em.create(GroupInventory, {
-      ...inventoryItemData,
-    });
-    await em.persistAndFlush(inventoryItem);
+    if (!groupInventoryItem) {
+      throw new NotFoundError("Item not found.");
+    }
 
-    return res.status(200).json({ ...inventoryItem });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Add item to group inventory error:", error });
-  }
-}
+    try {
+      groupInventoryItem.assign({ character: null, loaned: false });
 
-async function returnItemToGroupInventory(
-  inventoryItemId: number,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  em: EntityManager,
-) {
-  const inventoryItem: GroupInventory | null = await em.findOne(
-    GroupInventory,
-    { id: inventoryItemId },
-  );
+      await em.persistAndFlush(groupInventoryItem);
 
-  if (!inventoryItem) {
-    return res.status(500).json({ message: "Item not found" });
-  }
-
-  try {
-    inventoryItem.assign({ character: null, loaned: false });
-    await em.persistAndFlush(inventoryItem);
-
-    await deleteItemFromInventory(req, res, next);
-
-    return res.status(200).json({ ...inventoryItem });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Group Item update unsuccessful:", error });
+      await this.inventoryService.deleteItemFromInventory(
+        groupInventoryItem.id,
+      );
+    } catch (error: any) {
+      throw new ServiceError(
+        "Group Item update unsuccessful: " + error.message,
+      );
+    }
   }
 }

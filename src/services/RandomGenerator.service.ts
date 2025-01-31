@@ -1,48 +1,40 @@
-import { NextFunction, Request, Response } from "express";
-import { EntityManager, RequestContext } from "@mikro-orm/core";
 import { Item } from "../entities/Item.entity";
+import { BaseService } from "./Base.service";
+import { NotFoundError } from "../utils/NotFound.error";
+import { ServiceError } from "../utils/Service.error";
 
-function getRandomInt(min: number, max: number): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
+export class RandomGeneratorService extends BaseService {
+  getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
 
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export async function getRandomItem(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const em: EntityManager | undefined = RequestContext.getEntityManager();
-  const type: number = Number(req.body.type);
-
-  if (!em) {
-    return res.status(500).json({ message: "Entity manager not available" });
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const allItems = await em.find(Item, { type: { $eq: type } });
+  async getRandomItems(type: number) {
+    const em = this.getEntityManager();
 
-  if (!allItems) {
-    return res.status(500).json({ message: "No items found" });
-  }
+    const allItems = await em.find(Item, { type: { $eq: type } });
 
-  try {
-    const randomItems: Item[] = [];
-    for (let i = 1; i <= 10; ) {
-      const randomIndex: number = getRandomInt(0, allItems.length - 1);
-      if (randomItems.includes(allItems[randomIndex])) {
-        continue;
-      }
-
-      randomItems.push(allItems[randomIndex]);
-      i++;
+    if (!allItems) {
+      throw new NotFoundError("No items found");
     }
 
-    return res.status(200).json([...randomItems]);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Error generating random item", error });
+    try {
+      const randomItems: Item[] = [];
+      for (let i = 1; i <= 10; ) {
+        const randomIndex: number = this.getRandomInt(0, allItems.length - 1);
+        if (randomItems.includes(allItems[randomIndex])) {
+          continue;
+        }
+
+        randomItems.push(allItems[randomIndex]);
+        i++;
+      }
+
+      return randomItems;
+    } catch (error) {
+      throw new ServiceError("Error generating random items");
+    }
   }
 }

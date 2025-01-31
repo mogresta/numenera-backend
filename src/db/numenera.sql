@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 14, 2025 at 05:47 PM
--- Server version: 8.0.40-0ubuntu0.24.04.1
+-- Generation Time: Jan 31, 2025 at 12:45 PM
+-- Server version: 8.0.41-0ubuntu0.24.04.1
 -- PHP Version: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `numenera`
 --
-CREATE DATABASE IF NOT EXISTS `numenera` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `numenera`;
 
 -- --------------------------------------------------------
 
@@ -35,7 +33,7 @@ CREATE TABLE `character` (
   `description` text,
   `tier` text NOT NULL,
   `user_id` int NOT NULL,
-  `type_id` int NOT NULL,
+  `character_type_id` int NOT NULL,
   `deleted` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -43,8 +41,8 @@ CREATE TABLE `character` (
 -- Dumping data for table `character`
 --
 
-INSERT INTO `character` (`id`, `name`, `description`, `tier`, `user_id`, `type_id`, `deleted`) VALUES
-(1, 'Doofus', 'Test character', '1', 4, 3, 0);
+INSERT INTO `character` (`id`, `name`, `description`, `tier`, `user_id`, `character_type_id`, `deleted`) VALUES
+(1, 'Doofus', 'Test character', '2', 4, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -88,7 +86,22 @@ CREATE TABLE `group_inventory` (
 --
 
 INSERT INTO `group_inventory` (`id`, `character_id`, `item_id`, `expended`, `loaned`) VALUES
-(1, 1, 2, NULL, NULL);
+(1, 1, 2, 0, 1),
+(2, NULL, 2, 0, 0),
+(3, NULL, 1, 1, 1),
+(4, 1, 1, 0, 1),
+(5, NULL, 1, 0, 0),
+(6, NULL, 1, 0, 0),
+(7, NULL, 1, 0, 0),
+(8, NULL, 1, 0, 0),
+(9, NULL, 1, 0, 0),
+(10, NULL, 1, 0, 0),
+(11, NULL, 4, 0, 0),
+(12, NULL, 1, 0, 0),
+(13, NULL, 4, 0, 0),
+(14, NULL, 4, 0, 0),
+(15, NULL, 4, 0, 0),
+(16, NULL, 4, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -128,7 +141,11 @@ CREATE TABLE `inventory_item` (
 --
 
 INSERT INTO `inventory_item` (`id`, `inventory_id`, `item_id`, `expended`, `group_inventory_id`) VALUES
-(1, 1, 1, NULL, NULL);
+(1, 1, 1, NULL, NULL),
+(2, 1, 1, 1, NULL),
+(3, 1, 2, 1, NULL),
+(4, 1, 4, 0, NULL),
+(5, 1, 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -157,7 +174,9 @@ CREATE TABLE `item` (
 
 INSERT INTO `item` (`id`, `name`, `description`, `level`, `forms`, `depletion`, `material`, `modification`, `reproduction`, `type_id`, `plan_type_id`, `source_id`) VALUES
 (1, 'Test Item', 'This item is only for testing purposes', 2, 'thingamabobbit', '1d10', 'made of stuff', 'none', 'none', 1, NULL, 1),
-(2, 'Other test Item', 'Another testing item', 2, 'pillow', '1d6', 'fluff', 'none', 'none', 2, NULL, 1);
+(2, 'Other test Item', 'Another testing item', 2, 'pillow', '1d6', 'fluff', 'none', 'none', 2, NULL, 1),
+(3, 'Boombox', 'new and crazy item for testing', 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, 4),
+(4, 'Blastbox', 'another very interesting vehicle', 2, NULL, NULL, NULL, NULL, NULL, 7, NULL, 5);
 
 -- --------------------------------------------------------
 
@@ -261,7 +280,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(4, 'Mario', 'mario@random.com', '$2a$10$NnEsyxlTPkTO2sI9DZQeu..wz7cryD/kY9atCbFSQfuhP8tBqfdDa', '2024-12-17 14:05:42', '2024-12-17 14:05:42');
+(4, 'Mario O', 'mario@random.com', '$2a$10$NnEsyxlTPkTO2sI9DZQeu..wz7cryD/kY9atCbFSQfuhP8tBqfdDa', '2024-12-17 14:05:42', '2025-01-16 15:04:31');
 
 --
 -- Indexes for dumped tables
@@ -273,7 +292,7 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `created_at`, `update
 ALTER TABLE `character`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `character_type_id` (`type_id`);
+  ADD KEY `character_type_id` (`character_type_id`);
 
 --
 -- Indexes for table `character_type`
@@ -301,9 +320,9 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `inventory_item`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `group_inventory_id` (`group_inventory_id`) USING BTREE,
   ADD KEY `item_id` (`item_id`),
-  ADD KEY `inventory_id` (`inventory_id`) USING BTREE,
-  ADD KEY `group_inventory_id` (`group_inventory_id`);
+  ADD KEY `inventory_id` (`inventory_id`) USING BTREE;
 
 --
 -- Indexes for table `item`
@@ -358,7 +377,7 @@ ALTER TABLE `character_type`
 -- AUTO_INCREMENT for table `group_inventory`
 --
 ALTER TABLE `group_inventory`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -370,13 +389,13 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `inventory_item`
 --
 ALTER TABLE `inventory_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `plan_type`
@@ -411,7 +430,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `character`
   ADD CONSTRAINT `character_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `character_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `character_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `character_ibfk_2` FOREIGN KEY (`character_type_id`) REFERENCES `character_type` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `group_inventory`
